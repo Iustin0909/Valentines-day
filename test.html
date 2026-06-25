@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Valentine's Day</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        min-height: 100svh;
+        font-family: Arial, sans-serif;
+        color: #351824;
+        background:
+          radial-gradient(circle at top left, #ffd1dc, transparent 35%),
+          radial-gradient(circle at bottom right, #ff9eb8, transparent 35%),
+          linear-gradient(135deg, #fff7f8, #ffdbe5);
+        overflow-x: hidden;
+      }
+
+      main {
+        min-height: 100vh;
+        min-height: 100svh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        padding:
+          max(24px, env(safe-area-inset-top))
+          max(18px, env(safe-area-inset-right))
+          max(24px, env(safe-area-inset-bottom))
+          max(18px, env(safe-area-inset-left));
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+
+      section {
+        width: min(100%, 680px);
+      }
+
+      h1 {
+        font-size: clamp(2.35rem, 11vw, 6.5rem);
+        line-height: 1;
+        margin: 0;
+        color: #c9184a;
+      }
+
+      p {
+        max-width: 560px;
+        font-size: clamp(1rem, 4vw, 1.2rem);
+        line-height: 1.7;
+        margin: 24px auto;
+      }
+
+      button {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-appearance: none;
+        appearance: none;
+        border: 0;
+        border-radius: 999px;
+        min-height: 48px;
+        padding: 14px 24px;
+        background: #c9184a;
+        color: white;
+        font-size: max(1rem, 16px);
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 12px 28px rgba(201, 24, 74, 0.3);
+        white-space: nowrap;
+        touch-action: manipulation;
+      }
+
+      .choices {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      select {
+        -webkit-appearance: none;
+        appearance: none;
+        border: 2px solid #ff8fab;
+        border-radius: 999px;
+        padding: 14px 20px;
+        background: white;
+        color: #351824;
+        font-size: max(1rem, 16px);
+        font-weight: 700;
+        min-width: min(100%, 180px);
+        min-height: 48px;
+      }
+
+      #yesButton {
+        transition:
+          font-size 0.2s ease,
+          padding 0.2s ease;
+      }
+
+      .date-picker {
+        display: none;
+      }
+
+      .date-form {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-top: 28px;
+      }
+
+      .date-form button {
+        min-width: 140px;
+      }
+
+      .status-message {
+        min-height: 24px;
+        margin-top: 18px;
+        font-weight: 700;
+        color: #c9184a;
+      }
+
+      .heart {
+        position: relative;
+        width: clamp(82px, 24vw, 130px);
+        height: clamp(82px, 24vw, 130px);
+        background: #ff477e;
+        transform: rotate(-45deg);
+        margin: 0 auto clamp(34px, 9vw, 48px);
+        animation: pulse 1.4s infinite;
+        box-shadow: 0 20px 50px rgba(201, 24, 74, 0.35);
+      }
+
+      .heart::before,
+      .heart::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #ff477e;
+        border-radius: 50%;
+      }
+
+      .heart::before {
+        top: -50%;
+        left: 0;
+      }
+      .heart::after {
+        left: 50%;
+        top: 0;
+      }
+
+      .floating {
+        position: fixed;
+        color: #c9184a;
+        font-size: 28px;
+        pointer-events: none;
+        animation: float 1.5s ease-out forwards;
+        z-index: 5;
+      }
+
+      @keyframes pulse {
+        50% {
+          transform: rotate(-45deg) scale(1.08);
+        }
+      }
+
+      @keyframes float {
+        to {
+          opacity: 0;
+          transform: translateY(-140px) scale(1.6);
+        }
+      }
+
+      @media (max-width: 520px) {
+        .choices,
+        .date-form {
+          gap: 12px;
+        }
+
+        .date-form {
+          align-items: center;
+          flex-direction: column;
+        }
+
+        select,
+        .date-form button {
+          width: min(100%, 260px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section id="proposalPage">
+        <div class="heart"></div>
+        <h1>Happy Valentine's Day</h1>
+        <p>
+          A little page full of love, sweetness, and tiny floating hearts. You
+          make the world warmer just by being in it.
+        </p>
+        <div class="choices">
+          <button id="yesButton" onclick="showDatePage()">yes</button>
+          <button id="noButton" onclick="handleNoClick()">no</button>
+        </div>
+      </section>
+
+      <section id="datePage" class="date-picker">
+        <div class="heart"></div>
+        <h1>Choose our date</h1>
+        <p>Pick the day and hour, and I will be there.</p>
+        <form
+          id="dateForm"
+          class="date-form"
+          action="https://formspree.io/f/xqevpebk"
+          method="POST"
+        >
+          <select id="dateDay" name="day" aria-label="Select the day" required>
+            <option value="">day</option>
+            <option>Monday</option>
+            <option>Tuesday</option>
+            <option>Wednesday</option>
+            <option>Thursday</option>
+            <option>Friday</option>
+            <option>Saturday</option>
+            <option>Sunday</option>
+          </select>
+          <select
+            id="dateHour"
+            name="hour"
+            aria-label="Select the hour"
+            required
+          >
+            <option value="">hour</option>
+            <option>12:00</option>
+            <option>13:00</option>
+            <option>14:00</option>
+            <option>15:00</option>
+            <option>16:00</option>
+            <option>17:00</option>
+            <option>18:00</option>
+            <option>19:00</option>
+            <option>20:00</option>
+            <option>21:00</option>
+          </select>
+          <button type="submit">submit</button>
+        </form>
+        <p id="formStatus" class="status-message" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <script>
+      const proposalPage = document.getElementById("proposalPage");
+      const datePage = document.getElementById("datePage");
+      const yesButton = document.getElementById("yesButton");
+      const noButton = document.getElementById("noButton");
+      const dateForm = document.getElementById("dateForm");
+      const formStatus = document.getElementById("formStatus");
+      const noMessages = [
+        "are you sure?",
+        "really?",
+        "think again",
+        "please?",
+        "last chance",
+      ];
+      let noClicks = 0;
+
+      dateForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        formStatus.textContent = "Sending...";
+
+        const response = await fetch(dateForm.action, {
+          method: "POST",
+          body: new FormData(dateForm),
+          headers: {
+            Accept: "application/json",
+          },
+        });
+
+        if (response.ok) {
+          dateForm.reset();
+          formStatus.textContent = "Sent. Date secured.";
+        } else {
+          formStatus.textContent = "Something went wrong. Try again.";
+        }
+      });
+
+      function handleNoClick() {
+        noButton.textContent = noMessages[noClicks % noMessages.length];
+        noClicks++;
+        const growth = Math.min(noClicks, 6);
+        yesButton.style.fontSize = 1 + growth * 0.18 + "rem";
+        yesButton.style.padding =
+          14 + growth * 3 + "px " + (24 + growth * 5) + "px";
+      }
+
+      function showDatePage() {
+        sendHearts();
+        proposalPage.style.display = "none";
+        datePage.style.display = "block";
+      }
+
+      function sendHearts() {
+        for (let i = 0; i < 24; i++) {
+          const heart = document.createElement("span");
+          heart.className = "floating";
+          heart.textContent = "♥";
+          heart.style.left = Math.random() * 100 + "vw";
+          heart.style.top = 60 + Math.random() * 30 + "vh";
+          heart.style.animationDelay = Math.random() * 0.35 + "s";
+          document.body.appendChild(heart);
+
+          setTimeout(() => heart.remove(), 1800);
+        }
+      }
+    </script>
+  </body>
+</html>
